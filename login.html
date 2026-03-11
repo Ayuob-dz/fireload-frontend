@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - Fire Load</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #1a1a2e, #16213e); display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-card { background: white; border-radius: 20px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .logo { text-align: center; font-size: 2rem; font-weight: bold; color: #ff7b00; margin-bottom: 20px; }
+        .btn-primary { background: #ff7b00; border: none; }
+        .btn-primary:hover { background: #e06b00; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">🔥 Fire Load</div>
+        <div id="error" class="alert alert-danger" style="display: none;"></div>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" id="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">كلمة المرور</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">تسجيل الدخول</button>
+        </form>
+        <div class="mt-3 text-center">
+            ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideError('error');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const response = await fetch(API_BASE + '/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            if (response.ok) {
+                setToken(data.token);
+                window.location.href = 'dashboard.html';
+            } else {
+                showError('error', data.message || 'خطأ في تسجيل الدخول');
+            }
+        });
+    </script>
+</body>
+</html>
